@@ -23,3 +23,17 @@ Meteor.publish('lists.private', function listsPrivate() {
     fields: Lists.publicFields,
   });
 });
+
+Meteor.publish('lists.collaborator', function listsCollaborate() {
+  if (!this.userId) {
+    return this.ready();
+  }
+  console.log("lists.collaborator called for " + this.userId)
+  //console.log(Lists.find({}).fetch());
+  console.log(Lists.find({collaborators: {$in: [this.userId]}}).fetch());
+  return Lists.find({
+    collaborators: {$in: [this.userId]},
+  }, {
+    fields: Lists.publicFields,
+  });
+});

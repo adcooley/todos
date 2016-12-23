@@ -16,7 +16,7 @@ export const insert = new ValidatedMethod({
   run({ listId, text }) {
     const list = Lists.findOne(listId);
 
-    if (list.isPrivate() && list.userId !== this.userId) {
+    if (list.isPrivate() && (list.userId !== this.userId && list.collaborators.indexOf(this.userId)<0)) {
       throw new Meteor.Error('api.todos.insert.accessDenied',
         'Cannot add todos to a private list that is not yours');
     }
