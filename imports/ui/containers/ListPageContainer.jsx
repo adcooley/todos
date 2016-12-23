@@ -7,7 +7,9 @@ const ListPageContainer = createContainer(({ params: { id } }) => {
   const todosHandle = Meteor.subscribe('todos.inList', { listId: id });
   const loading = !todosHandle.ready();
   const list = Lists.findOne(id);
+
   const listExists = !loading && !!list;
+  console.log(loading, list, listExists);
   return {
     loading,
     list,

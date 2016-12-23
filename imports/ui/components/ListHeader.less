@@ -80,7 +80,24 @@
       &:last-child { margin-right: .5rem; }
     }
   }
-
+  .input-email-subscribe {
+    display: inline-flex;
+    margin-right: 50px;
+    input[type="text"] {
+      background: transparent;
+      border: solid 1px;
+      padding: 6px;
+    }
+    button[type="submit"] {
+      padding: 0;
+      background: none;
+    }
+    .icon-add {
+      position: static;
+      margin-left: 5px;
+      color: black;
+    }
+  }
   // Hide & show options and nav icons
   @media screen and (min-width: 40em) {
     .nav-group:not(.right) { display: none !important; }

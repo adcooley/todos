@@ -44,6 +44,7 @@ Lists.schema = new SimpleSchema({
   name: { type: String },
   incompleteCount: { type: Number, defaultValue: 0 },
   userId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
+  collaborators: { type: [String], optional: true },
 });
 
 Lists.attachSchema(Lists.schema);
@@ -55,6 +56,7 @@ Lists.publicFields = {
   name: 1,
   incompleteCount: 1,
   userId: 1,
+  collaborators: 1
 };
 
 Factory.define('list', Lists, {});
@@ -73,7 +75,7 @@ Lists.helpers({
       return true;
     }
 
-    return this.userId === userId;
+    return this.userId === userId || this.collaborators.indexOf(userId)>=0;
   },
   todos() {
     return Todos.find({ listId: this._id }, { sort: { createdAt: -1 } });

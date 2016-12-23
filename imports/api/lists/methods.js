@@ -68,6 +68,51 @@ export const makePublic = new ValidatedMethod({
   },
 });
 
+//
+export const addCollaborator = new ValidatedMethod({
+  name: 'lists.addCollaborator',
+  validate: new SimpleSchema({
+    listId: { type: String },
+    email: { type: String }
+  }).validator(),
+  run({ listId, email }) {
+
+    console.log(listId, email);
+    if (!this.userId) {
+      throw new Meteor.Error('api.lists.makePublic.notLoggedIn',
+          'Must be logged in.');
+    }
+
+    const list = Lists.findOne(listId);
+    //console.log(Meteor.users.find({}).fetch());
+    const collaborator = Meteor.users.findOne({"emails.address": email});
+
+    if (!list.editableBy(this.userId)) {
+      throw new Meteor.Error('api.lists.addCollaborator.accessDenied',
+          'You don\'t have permission to edit this list.');
+    }
+
+    if(!collaborator)
+    {
+      throw new Meteor.Error('api.lists.addCollaborator.badRequest',
+          'Wasn\'t able to find a user with email.');
+    }
+    console.log(collaborator)
+    if(!list.collaborators)
+    {
+      list.collaborators = [];
+    }
+    list.collaborators.push(collaborator._id);
+    //list.save();
+    // XXX the security check above is not atomic, so in theory a race condition could
+    // result in exposing private data
+    // TODO: add collaboratorId to collaborators
+    Lists.update(listId, {
+      $set: { collaborators: list.collaborators },
+    });
+  }
+});
+
 export const updateName = new ValidatedMethod({
   name: 'lists.updateName',
   validate: new SimpleSchema({
@@ -121,6 +166,7 @@ const LISTS_METHODS = _.pluck([
   makePrivate,
   updateName,
   remove,
+  addCollaborator
 ], 'name');
 
 if (Meteor.isServer) {

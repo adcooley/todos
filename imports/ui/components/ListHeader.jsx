@@ -11,6 +11,7 @@ import {
   makePublic,
   makePrivate,
   remove,
+  addCollaborator
 } from '../../api/lists/methods.js';
 
 import {
@@ -32,6 +33,7 @@ export default class ListHeader extends BaseComponent {
     this.toggleListPrivacy = this.toggleListPrivacy.bind(this);
     this.createTodo = this.createTodo.bind(this);
     this.focusTodoInput = this.focusTodoInput.bind(this);
+    this.addCollaborator = this.addCollaborator.bind(this);
   }
 
   onListFormSubmit(event) {
@@ -88,6 +90,23 @@ export default class ListHeader extends BaseComponent {
     }
   }
 
+  addCollaborator(event)
+  {
+    event.preventDefault();
+    const list = this.props.list;
+    console.log("addCollaborator called")
+    console.log({listId: list._id, email: this.collaboratorEmail.value});
+    try
+    {
+      addCollaborator.call({listId: list._id, email: this.collaboratorEmail.value});
+      alert("This list is shared for " + this.collaboratorEmail.value);
+    }catch(err)
+    {
+      alert(err.message);
+    }
+
+  }
+
   toggleListPrivacy() {
     const list = this.props.list;
     if (list.userId) {
@@ -99,6 +118,7 @@ export default class ListHeader extends BaseComponent {
 
   createTodo(event) {
     event.preventDefault();
+    console.log(this);
     const input = this.newTodoInput;
     if (input.value.trim()) {
       insert.call({
@@ -146,6 +166,15 @@ export default class ListHeader extends BaseComponent {
             <span className="icon-cog" />
           </div>
           <div className="options-web">
+            <form className="input-symbol input-email-subscribe" onSubmit={this.addCollaborator}>
+              <input
+                  type="text"
+                  ref={(c) => { this.collaboratorEmail = c; }}
+                  placeholder="Add email of friends to share"
+              />
+              <button type="submit" > <span className="icon-add" /> </button>
+
+            </form>
             <a className="nav-item" onClick={this.toggleListPrivacy}>
               {list.userId
                 ? <span
