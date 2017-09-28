@@ -3,13 +3,13 @@
 .page.lists-show {
   .content-scrollable {
     background: @color-empty;
-    top: 5em !important;
+    top: 8em !important;
   }
 
   // Custom nav for lists-show
   nav {
     background: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
-    height: 5em;
+    height: 8em;
 
     text-align: center;
     @media screen and (min-width: 40em) { text-align: left; }
@@ -67,6 +67,12 @@
         padding-right: 3em;
         padding-left: 1rem;
       }
+    }
+
+    .todo-categories {
+      .position(absolute, 5em, 0, auto, 0);
+
+      
     }
 
     select.list-edit {
